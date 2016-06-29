@@ -18,7 +18,8 @@ public class Edge {  //undirected
 		this.nodeTwo = nodeTwo;
 	}
 	
-	public Edge(Node nodeOne, Node nodeTwo, double p){
+	public Edge(int index, Node nodeOne, Node nodeTwo, double p){
+		this.index = index;
 		this.nodeOne = nodeOne;
 		this.nodeTwo = nodeTwo;
 		this.p = p;
@@ -29,7 +30,7 @@ public class Edge {  //undirected
 	}
 	
 	public String toString(){
-		return "Edge: ( " + this.nodeOne + " --- " + this.nodeTwo + ")"; 
+		return "Edge: ( " + this.index + " ) "+ "( " + this.nodeOne + " --- " + this.nodeTwo + ")" + " P = " + this.p; 
 	}
 	
 }
