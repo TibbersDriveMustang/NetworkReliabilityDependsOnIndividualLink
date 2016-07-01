@@ -89,6 +89,7 @@ public class drawChart extends ApplicationFrame{
         dataset.addValue(3.0, series3, category4);
         dataset.addValue(6.0, series3, category5);
 */        
+        
         return dataset;
         
     }	
