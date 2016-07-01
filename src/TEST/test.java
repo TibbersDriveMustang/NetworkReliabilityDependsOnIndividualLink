@@ -6,11 +6,14 @@ import java.util.*;
 
 import javax.swing.JFrame;
 
+
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.graph.*;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.*;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
+
+import drawGraph.*;
 
 public class test {
 	int numNodes;
@@ -20,6 +23,7 @@ public class test {
 	List<Node> nodes;
 	List<Edge> edges;
 	int[] studentID;
+	Graphics2D  g2d;
 	
 	public test(int num, double p){
 		numNodes = num;
@@ -78,6 +82,14 @@ public class test {
 		return pi;
 	}
 	
+	public double getSystemReliability(double p){
+		this.p = p;
+		double allEdgesNotWork = Math.pow(1 - this.p, this.numNodes - 1);
+		double result = 1 - (1 - Math.pow(1 - allEdgesNotWork, this.numNodes));
+		System.out.println("System Reliability" + "(p = " + this.p + ") = " + result);
+		return result;
+	}
+	
 	public void showGraph(){
 		CircleLayout temp = new CircleLayout(this.graph);
 		temp.setRadius(380);
@@ -90,8 +102,18 @@ public class test {
 	    frame.setVisible(true);
 	}
 	
+	public void showReliabilityGraph(){
+		BasicVisualizationServer vs = new BasicVisualizationServer(temp, new Dimension(600,400));
+		Graphics g = new Graphics();
+		this.g2d = new Graphics2D();
+	}
+	
 	public static void main(String args[]){
-		test test1 = new test(5,2);
+		test test1 = new test(5,0.85);  //(numOfNodes,p) = (5,2)
+		for(int i = 0; i < 20; i++){
+			double p = (i + 1) * 0.05;
+			test1.getSystemReliability(p);
+		}
 		test1.showGraph();
 	}
 }
