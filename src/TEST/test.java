@@ -1,11 +1,11 @@
 package TEST;
 import NetworkElements.*;
+import Drawing.drawChart;
 
 import java.awt.Dimension;
 import java.util.*;
 
 import javax.swing.JFrame;
-
 
 import edu.uci.ics.jung.algorithms.layout.CircleLayout;
 import edu.uci.ics.jung.graph.*;
@@ -13,21 +13,23 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.*;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
 
-import drawGraph.*;
 
 public class test {
+	static double systemReliabilities[];
 	int numNodes;
+	int numEdges;
 	double p;
 	myGraph<Node,Edge> graph;
 	ArrayList<Integer> indexList;
 	List<Node> nodes;
 	List<Edge> edges;
 	int[] studentID;
-	Graphics2D  g2d;
+	drawChart barChart;
 	
 	public test(int num, double p){
 		numNodes = num;
 		this.p = p;
+		numEdges = numNodes * (numNodes - 1);
 		studentID = new int[]{2,0,2,1,2,2,1,1,3,7};
 		graph = new myGraph<Node, Edge>();
 		indexList = new ArrayList<Integer>();
@@ -102,18 +104,20 @@ public class test {
 	    frame.setVisible(true);
 	}
 	
-	public void showReliabilityGraph(){
-		BasicVisualizationServer vs = new BasicVisualizationServer(temp, new Dimension(600,400));
-		Graphics g = new Graphics();
-		this.g2d = new Graphics2D();
+	public void showReliabilityGraph(double[] systemRel){
+		barChart = new drawChart("System Reliability", systemRel);
+		barChart.centerChart();
+		barChart.setVisible(true);
 	}
 	
 	public static void main(String args[]){
 		test test1 = new test(5,0.85);  //(numOfNodes,p) = (5,2)
+		test.systemReliabilities = new double[20];
 		for(int i = 0; i < 20; i++){
 			double p = (i + 1) * 0.05;
-			test1.getSystemReliability(p);
+			systemReliabilities[i] = test1.getSystemReliability(p);
 		}
-		test1.showGraph();
+		//test1.showGraph();
+		test1.showReliabilityGraph(test.systemReliabilities);
 	}
 }
