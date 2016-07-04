@@ -18,13 +18,15 @@ public class test {
 	static double systemReliabilities[];
 	int numNodes;
 	int numEdges;
-	double p;
-	myGraph<Node,Edge> graph;
-	ArrayList<Integer> indexList;
+	int combinNum;
+	double p;						//edge reliability
+	myGraph<Node,Edge> graph;		
+	ArrayList<Integer> indexList;		//d[i] to calculate p[i]
 	List<Node> nodes;
 	List<Edge> edges;
 	int[] studentID;
-	drawChart barChart;
+	drawChart barChart;     //bar chart to show system reliabilities depends on p
+	List<int[]> combinations;		//combinations of component states
 	
 	public test(int num, double p){
 		numNodes = num;
@@ -34,6 +36,7 @@ public class test {
 		graph = new myGraph<Node, Edge>();
 		indexList = new ArrayList<Integer>();
 		indexList.addAll(Arrays.asList(1,2,3,4,5,6,7,8,9,10));  //index from 1 to 10
+		combinations = new ArrayList<int[]>();
 		Collections.shuffle(indexList);
 		nodes = new ArrayList<Node>();
 		edges = new ArrayList<Edge>();
@@ -110,6 +113,28 @@ public class test {
 		barChart.setVisible(true);
 	}
 	
+	public void setCombinations(){
+		
+		for(int i = 0; i < 3; i++){
+			int[] temp = new int[10];
+			pickCombin(i,0,temp);     // set number of i edges` states to 1, others 0
+		}
+		System.out.println("Combination numbers: " + this.combinNum);
+	}	
+	public void pickCombin(int i,int index,int[] temp){
+		if(i == 0){
+			System.out.println(Arrays.toString(temp));
+			this.combinations.add(temp);
+			this.combinNum++;
+			return;
+		}
+		for(int j = index; j < 10; j++){
+			int[] temp2 = temp.clone();
+			temp2[j] = 1;
+			pickCombin(i - 1,index + 1 + j,temp2);
+		}
+	}
+	
 	public static void main(String args[]){
 		test test1 = new test(5,0.85);  //(numOfNodes,p) = (5,2)
 		test.systemReliabilities = new double[20];
@@ -119,5 +144,9 @@ public class test {
 		}
 		//test1.showGraph();
 		test1.showReliabilityGraph(test.systemReliabilities);
+		//fix p = 0.9
+		test1.getSystemReliability(0.9);
+		//pick k combinations randomly and fix the corresponding system condition
+		test1.setCombinations();
 	}
 }
