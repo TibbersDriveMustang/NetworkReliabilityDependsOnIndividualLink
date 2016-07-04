@@ -115,23 +115,23 @@ public class test {
 	
 	public void setCombinations(){
 		
-		for(int i = 0; i < 3; i++){
+		for(int i = 0; i <= 10; i++){
 			int[] temp = new int[10];
 			pickCombin(i,0,temp);     // set number of i edges` states to 1, others 0
 		}
 		System.out.println("Combination numbers: " + this.combinNum);
 	}	
-	public void pickCombin(int i,int index,int[] temp){
+	public void pickCombin(int i,int head,int[] temp){
 		if(i == 0){
 			System.out.println(Arrays.toString(temp));
 			this.combinations.add(temp);
 			this.combinNum++;
 			return;
 		}
-		for(int j = index; j < 10; j++){
+		for(int j = head; j < 10; j++){
 			int[] temp2 = temp.clone();
 			temp2[j] = 1;
-			pickCombin(i - 1,index + 1 + j,temp2);
+			pickCombin(i - 1, j + 1,temp2);
 		}
 	}
 	
