@@ -87,6 +87,7 @@ public class test {
 			}
 		}
 	}
+	
 	/**
 	 * Check if graph is connected
 	 * @return
@@ -96,9 +97,12 @@ public class test {
 		BFS = new BFSDistanceLabeler<Node,Edge>();
 		BFS.labelDistances(graph, nodes.get(0));
 		Set<Node> temp = BFS.getUnvisitedVertices();
-		if(temp.isEmpty())
-			return false;
-		return true;
+		if(temp.isEmpty()){
+			System.out.println("Graph is connected, System State is UP");
+			return true;
+		}
+		System.out.println("Graph is not connected, System State is DOWN");
+		return false;
 	}
 	
 	/**
@@ -111,7 +115,7 @@ public class test {
 			for(int j = 0; j < this.numEdges; j++){
 				if(temp[j] == 1){
 					this.edges.get(i).flipState();
-					asda
+					//to be continue
 				}
 			}
 		}
@@ -149,7 +153,7 @@ public class test {
 	 */
 	public double getSystemReliability(){
 		double result;
-		return result;
+		return result = 0;
 	}
 	
 	public void showGraph(){
@@ -229,7 +233,7 @@ public class test {
 			changeEdgeState(ID);
 			//
 		}
-		return result;
+		return result = 0;
 	}
 	
 	public static void main(String args[]){
@@ -245,6 +249,7 @@ public class test {
 		test1.getSystemReliability(0.9);
 		//pick k combinations randomly and fix the corresponding system condition
 		test1.setCombinations();
+		test1.checkConnectivity();
 		
 	}
 }
