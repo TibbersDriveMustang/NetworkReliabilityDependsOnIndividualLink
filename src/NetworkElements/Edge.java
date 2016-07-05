@@ -28,6 +28,9 @@ public class Edge {  //undirected
 		this.p = p;
 		this.state = true;
 	}
+	public Edge(int index){
+		this.index = index;
+	}
 	
 	public void changeReliability(double p){
 		this.p = p;
@@ -39,7 +42,7 @@ public class Edge {  //undirected
 	
 	
 	public String toString(){
-		return "Edge: ( " + this.index + " ) "+ "( " + this.nodeOne + " --- " + this.nodeTwo + ")" + " P = " + this.p; 
+		return "" + this.index; 
 	}
 	
 }

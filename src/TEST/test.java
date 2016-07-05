@@ -27,6 +27,7 @@ public class test {
 	int[] studentID;
 	drawChart barChart;     //bar chart to show system reliabilities depends on p
 	List<int[]> combinations;		//combinations of component states
+	int[] systemState; 	//1024 system state;
 	
 	BFSDistanceLabeler<Node,Edge> BFS;
 	
@@ -77,6 +78,7 @@ public class test {
 		this.edges.add(temp);
 		this.graph.addEdge(temp, nodeOne, nodeTwo, EdgeType.UNDIRECTED);
 	}
+	
 	/**
 	 * loop to add all edges
 	 */
@@ -84,39 +86,6 @@ public class test {
 		for(int i = 0; i < this.numNodes; i++){
 			for(int j = i + 1; j < this.numNodes; j++){
 				this.addOneEdge(this.nodes.get(i), this.nodes.get(j));
-			}
-		}
-	}
-	
-	/**
-	 * Check if graph is connected
-	 * @return
-	 * boolean
-	 */
-	public boolean checkConnectivity(){
-		BFS = new BFSDistanceLabeler<Node,Edge>();
-		BFS.labelDistances(graph, nodes.get(0));
-		Set<Node> temp = BFS.getUnvisitedVertices();
-		if(temp.isEmpty()){
-			System.out.println("Graph is connected, System State is UP");
-			return true;
-		}
-		System.out.println("Graph is not connected, System State is DOWN");
-		return false;
-	}
-	
-	/**
-	 * get all k combinations ID from int[] ID,
-	 * @param ID
-	 */
-	public void changeEdgeState(int[] ID){
-		for(int i = 0; i < ID.length; i++){
-			int[] temp = this.combinations.get(ID[i]);  // get int[] components state for one system state
-			for(int j = 0; j < this.numEdges; j++){
-				if(temp[j] == 1){
-					this.edges.get(i).flipState();
-					//to be continue
-				}
 			}
 		}
 	}
@@ -133,6 +102,51 @@ public class test {
 		double pi = Math.pow(this.p, temp);
 		return pi;
 	}
+	
+
+	
+	/**
+	 * Check if graph is connected
+	 * @return
+	 * boolean
+	 */
+	public boolean checkConnectivity(myGraph<Node,Edge> graphTemp){
+		BFS = new BFSDistanceLabeler<Node,Edge>();
+		BFS.labelDistances(graphTemp, nodes.get(0));
+		Set<Node> temp = BFS.getUnvisitedVertices();
+		if(temp.isEmpty()){
+			System.out.println("Graph is connected, System State is UP");
+			return true;
+		}
+		System.out.println("Graph is not connected, System State is DOWN");
+		return false;
+	}	
+	
+	/**
+	 * Save edges state + system state into temp[]
+	 * @param temp
+	 * @return
+	 */
+	public boolean checkConnectivity(int[] temp){
+		BFS = new BFSDistanceLabeler<Node,Edge>();
+		myGraph<Node,Edge> tempGraph = new myGraph<Node,Edge>();
+		tempGraph = (myGraph<Node,Edge>)this.graph.clone();
+		for(int i = 0; i < 10;i++){
+			if(temp[i] == 0){
+				tempGraph.removeEdge(new Edge(i + 1));    //edge index from 1 to 10
+			} 
+		}
+		BFS.labelDistances(tempGraph, nodes.get(0));
+		Set<Node> tempSet = BFS.getUnvisitedVertices();
+		if(tempSet.isEmpty()){
+			System.out.println("Graph is connected, System State is UP");
+			temp[10] = 1;
+			return true;
+		}
+		System.out.println("Graph is not connected, System State is DOWN");
+		temp[10] = 0;
+		return false;
+	}	
 	/**
 	 * for 20 edge components
 	 * @param p
@@ -180,7 +194,7 @@ public class test {
 	public void setCombinations(){
 		
 		for(int i = 0; i <= 10; i++){
-			int[] temp = new int[10];
+			int[] temp = new int[11];
 			pickCombin(i,0,temp);     // set number of i edges` states to 1, others 0
 		}
 		System.out.println("Combination numbers: " + this.combinNum);
@@ -188,6 +202,7 @@ public class test {
 	public void pickCombin(int i,int head,int[] temp){
 		if(i == 0){
 			System.out.println(Arrays.toString(temp));
+			checkConnectivity(temp);
 			this.combinations.add(temp);
 			this.combinNum++;
 			return;
@@ -217,6 +232,7 @@ public class test {
 				k--;
 			}
 		}
+		return;
 	}
 	/**
 	 * 
@@ -230,10 +246,24 @@ public class test {
 		for(int i = 0; i < 5; i++){
 			int[] ID = new int[k];
 			this.getKCombinationID(ID, k);
-			changeEdgeState(ID);
+			flipSystemState(ID);
 			//
 		}
 		return result = 0;
+	}
+	
+	/**
+	 * get all k combinations ID from int[] ID,
+	 * @param ID
+	 */
+	public void flipSystemState(int[] ID){
+		for(int i = 0; i < ID.length; i++){
+			int[] temp = this.combinations.get(ID[i]);  // get int[] components state for one system state
+			if(temp[10] == 1)
+				temp[10] = 0;
+			else 
+				temp[10] = 1;
+		}
 	}
 	
 	public static void main(String args[]){
@@ -249,7 +279,7 @@ public class test {
 		test1.getSystemReliability(0.9);
 		//pick k combinations randomly and fix the corresponding system condition
 		test1.setCombinations();
-		test1.checkConnectivity();
+		test1.checkConnectivity(test1.graph);
 		
 	}
 }
