@@ -4,6 +4,7 @@ public class Edge {  //undirected
 	private int index;
 	private double weight;
 	private double p;  //reliability
+	private boolean state;
 	private Node nodeOne;
 	private Node nodeTwo;
 	
@@ -11,11 +12,13 @@ public class Edge {  //undirected
 		this.index = index;
 		this.nodeOne = nodeOne;
 		this.nodeTwo = nodeTwo;
+		this.state = true;
 	}
 	
 	public Edge(Node nodeOne, Node nodeTwo){
 		this.nodeOne = nodeOne;
 		this.nodeTwo = nodeTwo;
+		this.state = true;
 	}
 	
 	public Edge(int index, Node nodeOne, Node nodeTwo, double p){
@@ -23,11 +26,17 @@ public class Edge {  //undirected
 		this.nodeOne = nodeOne;
 		this.nodeTwo = nodeTwo;
 		this.p = p;
+		this.state = true;
 	}
 	
 	public void changeReliability(double p){
 		this.p = p;
 	}
+	
+	public void flipState(){
+		this.state = !this.state;
+	}
+	
 	
 	public String toString(){
 		return "Edge: ( " + this.index + " ) "+ "( " + this.nodeOne + " --- " + this.nodeTwo + ")" + " P = " + this.p; 

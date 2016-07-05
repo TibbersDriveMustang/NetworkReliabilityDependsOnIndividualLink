@@ -12,7 +12,7 @@ import edu.uci.ics.jung.graph.*;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.*;
 import edu.uci.ics.jung.visualization.renderers.Renderer.VertexLabel.Position;
-
+import edu.uci.ics.jung.algorithms.shortestpath.BFSDistanceLabeler;
 
 public class test {
 	static double systemReliabilities[];
@@ -27,6 +27,8 @@ public class test {
 	int[] studentID;
 	drawChart barChart;     //bar chart to show system reliabilities depends on p
 	List<int[]> combinations;		//combinations of component states
+	
+	BFSDistanceLabeler<Node,Edge> BFS;
 	
 	public test(int num, double p){
 		numNodes = num;
@@ -63,7 +65,11 @@ public class test {
 		}
 		System.out.println(this.numNodes + " Nodes Created");
 	}
-	
+	/**
+	 * Add one edge to this.edges & this.graph
+	 * @param nodeOne
+	 * @param nodeTwo
+	 */
 	public void addOneEdge( Node nodeOne, Node nodeTwo){
 		int tempIndex = this.randomIndex();
 		Edge temp = new Edge(tempIndex,nodeOne,nodeTwo,setReliability(tempIndex - 1));
@@ -71,7 +77,9 @@ public class test {
 		this.edges.add(temp);
 		this.graph.addEdge(temp, nodeOne, nodeTwo, EdgeType.UNDIRECTED);
 	}
-	
+	/**
+	 * loop to add all edges
+	 */
 	public void addEdges(){
 		for(int i = 0; i < this.numNodes; i++){
 			for(int j = i + 1; j < this.numNodes; j++){
@@ -79,19 +87,68 @@ public class test {
 			}
 		}
 	}
+	/**
+	 * Check if graph is connected
+	 * @return
+	 * boolean
+	 */
+	public boolean checkConnectivity(){
+		BFS = new BFSDistanceLabeler<Node,Edge>();
+		BFS.labelDistances(graph, nodes.get(0));
+		Set<Node> temp = BFS.getUnvisitedVertices();
+		if(temp.isEmpty())
+			return false;
+		return true;
+	}
 	
+	/**
+	 * get all k combinations ID from int[] ID,
+	 * @param ID
+	 */
+	public void changeEdgeState(int[] ID){
+		for(int i = 0; i < ID.length; i++){
+			int[] temp = this.combinations.get(ID[i]);  // get int[] components state for one system state
+			for(int j = 0; j < this.numEdges; j++){
+				if(temp[j] == 1){
+					this.edges.get(i).flipState();
+					asda
+				}
+			}
+		}
+	}
 	
+	/**
+	 * Set p for each edge
+	 * @param index
+	 * index of edge
+	 * @return
+	 * reliability of the index edge
+	 */
 	public double setReliability(int index){
 		double temp = Math.ceil(this.studentID[index]/3.0);
 		double pi = Math.pow(this.p, temp);
 		return pi;
 	}
-	
+	/**
+	 * for 20 edge components
+	 * @param p
+	 * preset p for unique-p-system
+	 * @return
+	 */
 	public double getSystemReliability(double p){
 		this.p = p;
-		double allEdgesNotWork = Math.pow(1 - this.p, this.numNodes - 1);
-		double result = 1 - (1 - Math.pow(1 - allEdgesNotWork, this.numNodes));
+		double allEdgesOfNodeNotWork = Math.pow(1 - this.p, this.numNodes - 1);
+		double result = 1 - (1 - Math.pow(1 - allEdgesOfNodeNotWork, this.numNodes));
 		System.out.println("System Reliability" + "(p = " + this.p + ") = " + result);
+		return result;
+	}
+	/**
+	 * get System Reliability of Non-unique-p-system
+	 * @return
+	 * (double)System Reliability
+	 */
+	public double getSystemReliability(){
+		double result;
 		return result;
 	}
 	
@@ -112,7 +169,10 @@ public class test {
 		barChart.centerChart();
 		barChart.setVisible(true);
 	}
-	
+//Combination Generating Module	
+	/**
+	 * set combinations to Combinations<int[]>, each int[] will represent one system state, for each component 1 flip , 0 remain
+	 */
 	public void setCombinations(){
 		
 		for(int i = 0; i <= 10; i++){
@@ -134,6 +194,43 @@ public class test {
 			pickCombin(i - 1, j + 1,temp2);
 		}
 	}
+//*********************	
+	/**
+	 * 
+	 * @param ID
+	 * the random ID for Combinations[ID]
+	 * @param k
+	 * how many IDs want
+	 * @return
+	 */
+	public void getKCombinationID(int[] ID, int k){
+		HashSet<Integer> temp = new HashSet<Integer>();
+		while(k > 0){
+			int rand = (int)(Math.random() * 1024);
+			if(!temp.contains(rand)){
+				temp.add(rand);
+				ID[k - 1] = rand; 
+				k--;
+			}
+		}
+	}
+	/**
+	 * 
+	 * @param k 
+	 * get System Reliability with K, repeatedly 5 times and average them
+	 * @return result
+	 * return averaged reliability
+	 */
+	public double getReliabilityForK(int k){
+		double result;
+		for(int i = 0; i < 5; i++){
+			int[] ID = new int[k];
+			this.getKCombinationID(ID, k);
+			changeEdgeState(ID);
+			//
+		}
+		return result;
+	}
 	
 	public static void main(String args[]){
 		test test1 = new test(5,0.85);  //(numOfNodes,p) = (5,2)
@@ -148,5 +245,6 @@ public class test {
 		test1.getSystemReliability(0.9);
 		//pick k combinations randomly and fix the corresponding system condition
 		test1.setCombinations();
+		
 	}
 }
