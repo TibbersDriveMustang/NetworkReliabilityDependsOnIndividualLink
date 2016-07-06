@@ -4,6 +4,7 @@ import Drawing.drawChart;
 
 import java.awt.Dimension;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 
@@ -131,11 +132,22 @@ public class test {
 		BFS = new BFSDistanceLabeler<Node,Edge>();
 		myGraph<Node,Edge> tempGraph = new myGraph<Node,Edge>();
 		tempGraph = (myGraph<Node,Edge>)this.graph.clone();
+		int count = 0;
+		System.out.println("TEST 136 temp: " + Arrays.toString(temp) );
 		for(int i = 0; i < 10;i++){
 			if(temp[i] == 0){
-				tempGraph.removeEdge(new Edge(i + 1));    //edge index from 1 to 10
+				if(tempGraph.removeEdge(edges.get(i))){    //edge index from 1 to 10
+					count++;
+				}
+				System.out.println("Num of Edge works: " + tempGraph.getEdgeCount());
 			} 
 		}
+		System.out.println("TEST 140 Edge removed: " + count );
+		System.out.println("BUG 140: No Edge Removed");
+		long m = 2000000000;
+		while(m > 0)
+			m--;
+
 		BFS.labelDistances(tempGraph, nodes.get(0));
 		Set<Node> tempSet = BFS.getUnvisitedVertices();
 		if(tempSet.isEmpty()){
@@ -166,8 +178,26 @@ public class test {
 	 * (double)System Reliability
 	 */
 	public double getSystemReliability(){
-		double result;
-		return result = 0;
+		double result = 0;
+		int count = 0;
+		for(int[] itr: this.combinations){   //1024
+			double temp = 1.0;
+			if(itr[10] == 1){
+				count++;
+				for(int i = 0; i < 10; i++){
+					if(itr[i] != 0){
+						temp *= this.p;
+					}
+					else{
+						temp *= (1 - this.p);
+					}
+				}
+			}
+			result += temp;
+		}
+		System.out.println("TEST 186: Count: " + count);
+		System.out.println("TEST 187: result: " + result);
+		return result;
 	}
 	
 	public void showGraph(){
@@ -197,12 +227,17 @@ public class test {
 			int[] temp = new int[11];
 			pickCombin(i,0,temp);     // set number of i edges` states to 1, others 0
 		}
-		System.out.println("Combination numbers: " + this.combinNum);
+		System.out.println("Number of Combinations: " + this.combinNum);
 	}	
 	public void pickCombin(int i,int head,int[] temp){
 		if(i == 0){
-			System.out.println(Arrays.toString(temp));
-			checkConnectivity(temp);
+			if(checkConnectivity(temp) == true){
+				temp[10] = 1;
+			}
+			else{
+				temp[10] = 0;
+			}
+			System.out.println("temp to be added : " + Arrays.toString(temp));
 			this.combinations.add(temp);
 			this.combinNum++;
 			return;
@@ -242,14 +277,17 @@ public class test {
 	 * return averaged reliability
 	 */
 	public double getReliabilityForK(int k){
-		double result;
+		double result = 0;
 		for(int i = 0; i < 5; i++){
 			int[] ID = new int[k];
 			this.getKCombinationID(ID, k);
+			System.out.println(Arrays.toString(ID));
 			flipSystemState(ID);
-			//
+			result += getSystemReliability();
+			
 		}
-		return result = 0;
+		System.out.println("Reliability for k: " + result / 5.0);
+		return result / 5.0;
 	}
 	
 	/**
@@ -279,7 +317,8 @@ public class test {
 		test1.getSystemReliability(0.9);
 		//pick k combinations randomly and fix the corresponding system condition
 		test1.setCombinations();
-		test1.checkConnectivity(test1.graph);
+		//test1.checkConnectivity(test1.graph);
+		test1.getReliabilityForK(3);
 		
 	}
 }
