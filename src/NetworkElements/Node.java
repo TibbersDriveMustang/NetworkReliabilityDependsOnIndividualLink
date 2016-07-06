@@ -6,6 +6,6 @@ public class Node {
 		this.id = id;
 	}
 	public String toString(){
-		return "Node: " + this.id;
+		return "" + this.id;
 	}
 }

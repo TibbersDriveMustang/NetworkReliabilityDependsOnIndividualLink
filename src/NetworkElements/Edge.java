@@ -54,7 +54,7 @@ public class Edge {  //undirected
 	
 	
 	public String toString(){
-		return "" + this.index; 
+		return "" + this.index + "[" + this.nodeOne + "," + this.nodeTwo + "]"; 
 	}
 	
 }

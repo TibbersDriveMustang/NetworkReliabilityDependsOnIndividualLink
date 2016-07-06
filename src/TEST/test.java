@@ -137,16 +137,16 @@ public class test {
 			tempGraph.addEdge(tempEdge, tempEdge.getNodeOne(), tempEdge.getNodeTwo(), EdgeType.UNDIRECTED);
 		}
 		
-		System.out.println("tempGraph: " + tempGraph.toString());
-		System.out.println("this.Graph: " + this.graph.toString());
 		//(myGraph<Node,Edge>)this.graph.clone();
 		System.out.println("TEST 136 temp: " + Arrays.toString(temp) );
 		for(int i = 0; i < 10;i++){
 			if(temp[i] == 0){
-				if(!tempGraph.removeEdge(edges.get(i))){    //edge index from 1 to 10
-					System.out.println("Remove edge failed");
+				System.out.println("Edge want to remove: index " + i);
+				System.out.println("temp.Edges: " + tempGraph);
+				if(!tempGraph.removeEdge(i)){    //edge index from 1 to 10
+					System.out.println("No Edge Removed");
 				}
-				System.out.println("Num of Edge works: " + tempGraph.getEdgeCount()); 
+				System.out.println("Edges after removed:  " + tempGraph); 
 			} 
 		}
 		long m = 2000000000;
