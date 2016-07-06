@@ -62,7 +62,7 @@ public class test {
 	public void addNumberOfNodes(){
 		for(int i = 0; i < this.numNodes; i++){
 			Node temp = new Node(i);
-			this.graph.addVertex(temp);
+			//this.graph.addVertex(temp);      if edges be added, nodes will be added to graph automatically
 			this.nodes.add(temp);
 		}
 		System.out.println(this.numNodes + " Nodes Created");
@@ -131,8 +131,15 @@ public class test {
 	public boolean checkConnectivity(int[] temp){
 		BFS = new BFSDistanceLabeler<Node,Edge>();
 		myGraph<Node,Edge> tempGraph = new myGraph<Node,Edge>();
-		tempGraph =  (myGraph<Node,Edge>)this.graph.clone();
-		int count = 0;
+		Collection<Edge> tempEdges = this.graph.getEdges();
+		for(Edge edge: tempEdges){
+			Edge tempEdge = new Edge(edge.getIndex(),edge.getNodeOne(),edge.getNodeTwo());
+			tempGraph.addEdge(tempEdge, tempEdge.getNodeOne(), tempEdge.getNodeTwo(), EdgeType.UNDIRECTED);
+		}
+		
+		System.out.println("tempGraph: " + tempGraph.toString());
+		System.out.println("this.Graph: " + this.graph.toString());
+		//(myGraph<Node,Edge>)this.graph.clone();
 		System.out.println("TEST 136 temp: " + Arrays.toString(temp) );
 		for(int i = 0; i < 10;i++){
 			if(temp[i] == 0){
@@ -142,7 +149,6 @@ public class test {
 				System.out.println("Num of Edge works: " + tempGraph.getEdgeCount()); 
 			} 
 		}
-		System.out.println("TEST 140 Edge removed: " + count );
 		long m = 2000000000;
 		while(m > 0)
 			m--;

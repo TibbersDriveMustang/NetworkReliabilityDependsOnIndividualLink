@@ -36,6 +36,18 @@ public class Edge {  //undirected
 		this.p = p;
 	}
 	
+	public int getIndex(){
+		return this.index;
+	}
+	
+	public Node getNodeOne(){
+		return this.nodeOne;
+	}
+	
+	public Node getNodeTwo(){
+		return this.nodeTwo;
+	}
+	
 	public void flipState(){
 		this.state = !this.state;
 	}
