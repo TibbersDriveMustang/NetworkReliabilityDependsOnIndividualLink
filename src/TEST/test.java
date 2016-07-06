@@ -136,14 +136,13 @@ public class test {
 		System.out.println("TEST 136 temp: " + Arrays.toString(temp) );
 		for(int i = 0; i < 10;i++){
 			if(temp[i] == 0){
-				if(tempGraph.removeEdge(edges.get(i))){    //edge index from 1 to 10
-					count++;
+				if(!tempGraph.removeEdge(edges.get(i))){    //edge index from 1 to 10
+					System.out.println("Remove edge failed");
 				}
-				System.out.println("Num of Edge works: " + tempGraph.getEdgeCount());
+				System.out.println("Num of Edge works: " + tempGraph.getEdgeCount()); 
 			} 
 		}
 		System.out.println("TEST 140 Edge removed: " + count );
-		System.out.println("BUG 140: No Edge Removed");
 		long m = 2000000000;
 		while(m > 0)
 			m--;
