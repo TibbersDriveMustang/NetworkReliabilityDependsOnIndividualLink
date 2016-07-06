@@ -5,6 +5,9 @@ public class Node {
 	public Node(int id){
 		this.id = id;
 	}
+	public int getID(){
+		return this.id;
+	}
 	public String toString(){
 		return "" + this.id;
 	}

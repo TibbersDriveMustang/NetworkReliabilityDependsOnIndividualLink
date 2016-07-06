@@ -146,15 +146,33 @@ public class test {
 				if(!tempGraph.removeEdge(i)){    //edge index from 1 to 10
 					System.out.println("No Edge Removed");
 				}
-				System.out.println("Edges after removed:  " + tempGraph); 
 			} 
 		}
-		long m = 2000000000;
+		System.out.println("Edges after removed:  " + tempGraph); 
+		Iterator i = tempGraph.getEdges().iterator();
+		int[] nodeCheck = new int[5];
+		while(i.hasNext()){
+			Edge tempEdge = (Edge)i.next();
+			nodeCheck[tempEdge.getNodeOne().getID()] = 1;
+			nodeCheck[tempEdge.getNodeTwo().getID()] = 1;
+		}
+		for(int j = 0; j < 5; j++){
+			if(nodeCheck[j] == 0){
+				System.out.println("Graph is not connected, System State is DOWN");
+				temp[10] = 0;
+				return false;
+			}
+		}
+		System.out.println("Graph is connected, System State is UP");
+		temp[10] = 1;
+/*		long m = 2000000000;
 		while(m > 0)
 			m--;
-
-		BFS.labelDistances(tempGraph, nodes.get(0));
+*/
+		return true;
+/*		BFS.labelDistances(tempGraph, nodes.get(0));
 		Set<Node> tempSet = BFS.getUnvisitedVertices();
+		System.out.println("====================================================="); 
 		if(tempSet.isEmpty()){
 			System.out.println("Graph is connected, System State is UP");
 			temp[10] = 1;
@@ -163,6 +181,7 @@ public class test {
 		System.out.println("Graph is not connected, System State is DOWN");
 		temp[10] = 0;
 		return false;
+*/
 	}	
 	/**
 	 * for 20 edge components
