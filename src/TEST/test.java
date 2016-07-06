@@ -131,7 +131,7 @@ public class test {
 	public boolean checkConnectivity(int[] temp){
 		BFS = new BFSDistanceLabeler<Node,Edge>();
 		myGraph<Node,Edge> tempGraph = new myGraph<Node,Edge>();
-		tempGraph = (myGraph<Node,Edge>)this.graph.clone();
+		tempGraph =  (myGraph<Node,Edge>)this.graph.clone();
 		int count = 0;
 		System.out.println("TEST 136 temp: " + Arrays.toString(temp) );
 		for(int i = 0; i < 10;i++){
