@@ -17,12 +17,19 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+
 public class drawChart extends ApplicationFrame{
-    /**
+    private SystemStyle systemStyle;
+	
+	/**
      * 
      */
 	public void centerChart(){
 		RefineryUtilities.centerFrameOnScreen(this);
+	}
+
+	public enum SystemStyle{
+		FixedP,UnFixedP
 	}
 	
     /**
@@ -30,13 +37,13 @@ public class drawChart extends ApplicationFrame{
      * @param title  the frame title.
      */
 	
-	public drawChart(final String title , double[] data) {
+	public drawChart(String title , double[] data, SystemStyle systemStyle) {
 
         super(title);
-
-        final CategoryDataset dataset = createDataset(data);
-        final JFreeChart chart = createChart(dataset);
-        final ChartPanel chartPanel = new ChartPanel(chart);
+		this.systemStyle = systemStyle;
+        CategoryDataset dataset = createDataset(data);
+        JFreeChart chart = createChart(dataset);
+        ChartPanel chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(500, 270));
         setContentPane(chartPanel);
 
@@ -49,25 +56,36 @@ public class drawChart extends ApplicationFrame{
     private CategoryDataset createDataset(double[] data) {
         
         // row keys...
-        final String series1 = "Reliability";
+        String series1 = "Reliability";
         //final String series2 = "Second";
         //final String series3 = "Third";
 
         // column keys...
-        final String category1 = "p";
+        if(this.systemStyle == SystemStyle.FixedP){
+        	String category1 = "P";
+        }
+        else if(this.systemStyle == SystemStyle.UnFixedP){
+        	String category1 = "K";
+        }
         //final String category2 = "Category 2";
         //final String category3 = "Category 3";
         //final String category4 = "Category 4";
         //final String category5 = "Category 5";
 
         // create the dataset...
-        final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-
-        for(int i = 0; i < 20; i++){        	
-        	String temp = "0.05*" + (i + 1);
-        	dataset.addValue(data[i], series1, temp);
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        if(this.systemStyle == SystemStyle.FixedP){
+        	for(int i = 0; i < 20; i++){        	
+        		String temp = "0.05*" + (i + 1);
+        		dataset.addValue(data[i], series1, temp);
+        	}
         }
-        
+        else if(this.systemStyle == SystemStyle.UnFixedP){
+        	for(int i = 0; i < 21; i++){        	
+        		String temp = "" + i;
+        		dataset.addValue(data[i], series1, temp);
+        	}
+        }
 /*
         dataset.addValue(1.0, series1, "0.05");
         dataset.addValue(2.0, series1, "0.10");
@@ -100,12 +118,18 @@ public class drawChart extends ApplicationFrame{
      * 
      * @return The chart.
      */
-    private JFreeChart createChart(final CategoryDataset dataset) {
-        
+    private JFreeChart createChart(CategoryDataset dataset) {
+    	String axisLabel = "";
+    	if(this.systemStyle == SystemStyle.FixedP){
+    		axisLabel = "P";
+    	}
+    	else if(this.systemStyle == SystemStyle.UnFixedP){
+    		axisLabel = "K";
+    	}
         // create the chart...
-        final JFreeChart chart = ChartFactory.createBarChart(
+        JFreeChart chart = ChartFactory.createBarChart(
             "System Reliability",         // chart title
-            "p",               // domain axis label
+            axisLabel,               // domain axis label
             "Reliability",                  // range axis label
             dataset,                  // data
             PlotOrientation.VERTICAL, // orientation
@@ -120,21 +144,21 @@ public class drawChart extends ApplicationFrame{
         chart.setBackgroundPaint(Color.white);
 
         // get a reference to the plot for further customisation...
-        final CategoryPlot plot = chart.getCategoryPlot();
+        CategoryPlot plot = chart.getCategoryPlot();
         plot.setBackgroundPaint(Color.lightGray);
         plot.setDomainGridlinePaint(Color.white);
         plot.setRangeGridlinePaint(Color.white);
 
         // set the range axis to display integers only...
-        final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
         rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 
         // disable bar outlines...
-        final BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
         renderer.setDrawBarOutline(false);
         
         // set up gradient paints for series...
-        final GradientPaint gp0 = new GradientPaint(
+        GradientPaint gp0 = new GradientPaint(
             0.0f, 0.0f, Color.red, 
             0.0f, 0.0f, Color.lightGray
         );
@@ -151,7 +175,7 @@ public class drawChart extends ApplicationFrame{
         //renderer.setSeriesPaint(1, gp1);
         //renderer.setSeriesPaint(2, gp2);
 
-        final CategoryAxis domainAxis = plot.getDomainAxis();
+        CategoryAxis domainAxis = plot.getDomainAxis();
         domainAxis.setCategoryLabelPositions(
             CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0)
         );

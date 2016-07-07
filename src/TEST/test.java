@@ -105,25 +105,6 @@ public class test {
 		return pi;
 	}
 	
-
-	
-	/**
-	 * Check if graph is connected
-	 * @return
-	 * boolean
-	 */
-	public boolean checkConnectivity(myGraph<Node,Edge> graphTemp){
-		BFS = new BFSDistanceLabeler<Node,Edge>();
-		BFS.labelDistances(graphTemp, nodes.get(0));
-		Set<Node> temp = BFS.getUnvisitedVertices();
-		if(temp.isEmpty()){
-			System.out.println("Graph is connected, System State is UP");
-			return true;
-		}
-		System.out.println("Graph is not connected, System State is DOWN");
-		return false;
-	}	
-	
 	/**
 	 * Save edges state + system state into temp[]
 	 * @param temp
@@ -137,19 +118,14 @@ public class test {
 			Edge tempEdge = new Edge(edge.getIndex(),edge.getNodeOne(),edge.getNodeTwo());
 			tempGraph.addEdge(tempEdge, tempEdge.getNodeOne(), tempEdge.getNodeTwo(), EdgeType.UNDIRECTED);
 		}
-		
-		//(myGraph<Node,Edge>)this.graph.clone();
-		System.out.println("TEST 136 temp: " + Arrays.toString(temp) );
+	
 		for(int i = 0; i < 10;i++){
 			if(temp[i] == 0){
-				System.out.println("Edge want to remove: index " + i);
-				System.out.println("temp.Edges: " + tempGraph);
 				if(!tempGraph.removeEdge(i)){    //edge index from 1 to 10
-					System.out.println("No Edge Removed");
+					//System.out.println("No Edge Removed");
 				}
 			} 
 		}
-		System.out.println("Edges after removed:  " + tempGraph); 
 		Iterator i = tempGraph.getEdges().iterator();
 		int[] nodeCheck = new int[5];
 		while(i.hasNext()){
@@ -166,23 +142,7 @@ public class test {
 		}
 		System.out.println("Graph is connected, System State is UP");
 		temp[10] = 1;
-/*		long m = 2000000000;
-		while(m > 0)
-			m--;
-*/
 		return true;
-/*		BFS.labelDistances(tempGraph, nodes.get(0));
-		Set<Node> tempSet = BFS.getUnvisitedVertices();
-		System.out.println("====================================================="); 
-		if(tempSet.isEmpty()){
-			System.out.println("Graph is connected, System State is UP");
-			temp[10] = 1;
-			return true;
-		}
-		System.out.println("Graph is not connected, System State is DOWN");
-		temp[10] = 0;
-		return false;
-*/
 	}	
 	/**
 	 * for 20 edge components
@@ -213,11 +173,9 @@ public class test {
 				for(int i = 0; i < 10; i++){
 					if(itr[i] == 1){
 						temp *= this.p;
-						System.out.println("Current Temp 1: " + temp);
 					}
 					else{
 						temp *= (1 - this.p);
-						System.out.println("Current Temp 2: " + temp);
 					}
 				}
 			}
@@ -225,17 +183,16 @@ public class test {
 				temp = 0;
 			}
 		
-			//temp overflow problem
+			
 			temp = Double.parseDouble(numberFormat.format(temp));
-			System.out.println("Current Temp 3: " + temp);
 			result += temp;
 			result = Double.parseDouble(numberFormat.format(result));
-			System.out.println("Current Result: " + result);
+			//System.out.println("Current Result: " + result);
 			
 		}
-		System.out.println("TEST 222: Count: " + count);
-		System.out.println("TEST 223: p: " + this.p);
-		System.out.println("TEST 224: System Reliability: " + result);
+		//System.out.println("TEST 222: Count: " + count);
+		//System.out.println("TEST 223: p: " + this.p);
+		//System.out.println("TEST 224: System Reliability: " + result);
 		return result;
 	}
 	
@@ -251,8 +208,8 @@ public class test {
 	    frame.setVisible(true);
 	}
 	
-	public void showReliabilityGraph(double[] systemRel){
-		barChart = new drawChart("System Reliability", systemRel);
+	public void showReliabilityGraph(double[] systemRel,drawChart.SystemStyle systemSty ){
+		barChart = new drawChart("System Reliability", systemRel, systemSty);
 		barChart.centerChart();
 		barChart.setVisible(true);
 	}
@@ -266,7 +223,6 @@ public class test {
 			int[] temp = new int[11];
 			pickCombin(i,0,temp);     // set number of i edges` states to 1, others 0
 		}
-		System.out.println("Number of Combinations: " + this.combinNum);
 	}	
 	public void pickCombin(int i,int head,int[] temp){
 		if(i == 0){
@@ -276,7 +232,6 @@ public class test {
 			else{
 				temp[10] = 0;
 			}
-			System.out.println("temp to be added : " + Arrays.toString(temp));
 			this.combinations.add(temp);
 			this.combinNum++;
 			return;
@@ -320,12 +275,11 @@ public class test {
 		for(int i = 0; i < 5; i++){
 			int[] ID = new int[k];
 			this.getKCombinationID(ID, k);
-			System.out.println(Arrays.toString(ID));
 			flipSystemState(ID);
 			result += getSystemReliability();
 			
 		}
-		System.out.println("Reliability for k: " + result / 5.0);
+		System.out.println("Reliability for k = " + k + " is : " + result / 5.0);
 		return result / 5.0;
 	}
 	
@@ -351,14 +305,18 @@ public class test {
 			systemReliabilities[i] = test1.getSystemReliability(p);
 		}
 		//test1.showGraph();
-		test1.showReliabilityGraph(test.systemReliabilities);
+		test1.showReliabilityGraph(test.systemReliabilities,drawChart.SystemStyle.FixedP);
 		//fix p = 0.9
-		test1.getSystemReliability(0.5);
+		test1.getSystemReliability(0.9);
 		//pick k combinations randomly and fix the corresponding system condition
 		test1.setCombinations();
 		//test1.checkConnectivity(test1.graph);
 		//System.out.println("System Reliability: " + test1.getSystemReliability());
-		test1.getReliabilityForK(3);
-		
+		   //  pick k of the combinations, flip the system condition, then calculate the System Reliability
+		double[] reli = new double[21];
+		for(int i = 0; i < 21; i++){
+			reli[i] = test1.getReliabilityForK(i);
+		}
+		test1.showReliabilityGraph(reli,drawChart.SystemStyle.UnFixedP);
 	}
 }
