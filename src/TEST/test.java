@@ -3,6 +3,7 @@ import NetworkElements.*;
 import Drawing.drawChart;
 
 import java.awt.Dimension;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -203,6 +204,7 @@ public class test {
 	 */
 	public double getSystemReliability(){
 		double result = 0;
+		DecimalFormat numberFormat = new DecimalFormat("#.00000");
 		int count = 0;
 		for(int[] itr: this.combinations){   //1024
 			double temp = 1.0;
@@ -219,12 +221,17 @@ public class test {
 					}
 				}
 			}
+			else{
+				temp = 0;
+			}
+		
 			//temp overflow problem
+			temp = Double.parseDouble(numberFormat.format(temp));
 			System.out.println("Current Temp 3: " + temp);
 			result += temp;
-			long m = 2000000000;
-			while(m > 0)
-				m--;
+			result = Double.parseDouble(numberFormat.format(result));
+			System.out.println("Current Result: " + result);
+			
 		}
 		System.out.println("TEST 222: Count: " + count);
 		System.out.println("TEST 223: p: " + this.p);
