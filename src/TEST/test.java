@@ -209,18 +209,26 @@ public class test {
 			if(itr[10] == 1){
 				count++;
 				for(int i = 0; i < 10; i++){
-					if(itr[i] != 0){
+					if(itr[i] == 1){
 						temp *= this.p;
+						System.out.println("Current Temp 1: " + temp);
 					}
 					else{
 						temp *= (1 - this.p);
+						System.out.println("Current Temp 2: " + temp);
 					}
 				}
 			}
+			//temp overflow problem
+			System.out.println("Current Temp 3: " + temp);
 			result += temp;
+			long m = 2000000000;
+			while(m > 0)
+				m--;
 		}
-		System.out.println("TEST 186: Count: " + count);
-		System.out.println("TEST 187: result: " + result);
+		System.out.println("TEST 222: Count: " + count);
+		System.out.println("TEST 223: p: " + this.p);
+		System.out.println("TEST 224: System Reliability: " + result);
 		return result;
 	}
 	
@@ -338,10 +346,11 @@ public class test {
 		//test1.showGraph();
 		test1.showReliabilityGraph(test.systemReliabilities);
 		//fix p = 0.9
-		test1.getSystemReliability(0.9);
+		test1.getSystemReliability(0.5);
 		//pick k combinations randomly and fix the corresponding system condition
 		test1.setCombinations();
 		//test1.checkConnectivity(test1.graph);
+		//System.out.println("System Reliability: " + test1.getSystemReliability());
 		test1.getReliabilityForK(3);
 		
 	}
