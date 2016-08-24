@@ -215,7 +215,8 @@ public class test {
 	}
 //Combination Generating Module	
 	/**
-	 * set combinations to Combinations<int[]>, each int[] will represent one system state, for each component 1 flip , 0 remain
+	 * set combinations to Combinations<int[]>, each int[] will represent one system state
+	 * for each component 1 flip , 0 remain
 	 */
 	public void setCombinations(){
 		
@@ -299,12 +300,12 @@ public class test {
 	
 	public static void main(String args[]){
 		test test1 = new test(5,0.85);  //(numOfNodes,p) = (5,2)
+		//test1.showGraph();
 		test.systemReliabilities = new double[20];
 		for(int i = 0; i < 20; i++){
 			double p = (i + 1) * 0.05;
 			systemReliabilities[i] = test1.getSystemReliability(p);
 		}
-		//test1.showGraph();
 		test1.showReliabilityGraph(test.systemReliabilities,drawChart.SystemStyle.FixedP);
 		//fix p = 0.9
 		test1.getSystemReliability(0.9);
