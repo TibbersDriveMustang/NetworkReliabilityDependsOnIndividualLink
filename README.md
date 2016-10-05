@@ -16,7 +16,7 @@ Original Graph Created
 
 ![alt tag](https://github.com/TibbersDriveMustang/NetworkReliabilityDependsOnIndividualLink/blob/master/screenshot/totalCostGraph.png)
 
-Total Path Cost Graph
+Minimum Path Cost Graph
 
 ![alt tag](https://github.com/TibbersDriveMustang/NetworkReliabilityDependsOnIndividualLink/blob/master/screenshot/systemReliability.png)
 
